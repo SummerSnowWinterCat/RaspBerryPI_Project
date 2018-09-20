@@ -25,7 +25,7 @@ def prey():
         for x1 in x.find_all('a'):
             list_save.append(str(x1.get('href')))  # 获取网络路径
             list_save.append(get_info(get_url(str(x1.get('href')))))
-
+            list_save.append(" ")
     return list_save
 
 
@@ -65,14 +65,22 @@ def get_info(url):
     info_string = info_string.replace('\'', '')
     return str(info_string)
 
-
 def save_file():
     date_time = datetime.datetime.now().strftime('%Y%m%d')
-    print(date_time)
     url = 'save_file/' + date_time + '.txt'
-    file = open(url, 'w',encoding='utf8')
-    for x in prey():
-        file.write(x)
-        print(x)
-    file.close()
-    return 0
+    if (os.path.exists(url)):
+        print('true')
+        file = open(url, 'a+', encoding='utf-8')
+        for x in prey():
+            file.write(x + '\n')
+        file.close()
+        time.sleep(600)  # 休眠10分钟
+        return True
+    else:
+        print('false')
+        file = open(url, 'w', encoding='utf8')
+        for x in prey():
+            file.write(x + '\n')
+        file.close()
+        time.sleep(600)  # 休眠10分钟
+        return True
