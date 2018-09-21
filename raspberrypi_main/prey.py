@@ -73,7 +73,9 @@ def save_file():
         file = open(url, 'a+', encoding='utf-8')
         for x in prey():
             file.write(x + '\n')
+            print(x)
         file.close()
+
         time.sleep(600)
         return True
     else:
