@@ -84,5 +84,5 @@ def save_file():
         for x in prey():
             file.write(x + '\n')
         file.close()
-        time.sleep(600)
+        time.sleep(200)
         return True
