@@ -1,16 +1,16 @@
 import os
 from bs4 import BeautifulSoup
 import urllib.request as urlRequest
-import json
 import time
 import re
-import csv
-import pandas as pd
-import chardet
 import datetime
+import lxml
+import ssl
+
 
 
 def prey():
+    ssl._create_default_https_context = ssl._create_unverified_context
     url = "https://news.yahoo.co.jp/list/?c=computer"
     list_save = []
     headers = {
@@ -20,10 +20,10 @@ def prey():
     beautiful_soup_entity = BeautifulSoup(prey_page, 'lxml')
     list_box_wrap = beautiful_soup_entity.find_all(class_='ListBoxwrap')  # top20
     for x in list_box_wrap:
-        list_save.append(str(x.find_all('dt')[0].string))  # 获取标题
-        list_save.append(str(x.find_all('time')[0].string))  # 获取时间
+        list_save.append(str(x.find_all('dt')[0].string))
+        list_save.append(str(x.find_all('time')[0].string))
         for x1 in x.find_all('a'):
-            list_save.append(str(x1.get('href')))  # 获取网络路径
+            list_save.append(str(x1.get('href')))
             list_save.append(get_info(get_url(str(x1.get('href')))))
             list_save.append(" ")
     return list_save
@@ -67,20 +67,22 @@ def get_info(url):
 
 def save_file():
     date_time = datetime.datetime.now().strftime('%Y%m%d')
-    url = 'save_file/' + date_time + '.txt'
+    url = '../save_file/' + date_time + '.txt'
     if (os.path.exists(url)):
         print('true')
         file = open(url, 'a+', encoding='utf-8')
         for x in prey():
             file.write(x + '\n')
+            print(x)
         file.close()
-        time.sleep(600)  # 休眠10分钟
+
+        time.sleep(600)
         return True
     else:
         print('false')
-        file = open(url, 'w', encoding='utf8')
+        file = open(url, 'w', encoding='utf-8')
         for x in prey():
             file.write(x + '\n')
         file.close()
-        time.sleep(600)  # 休眠10分钟
+        time.sleep(200)
         return True
